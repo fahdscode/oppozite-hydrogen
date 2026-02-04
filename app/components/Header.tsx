@@ -7,7 +7,7 @@ import {
 } from '@shopify/hydrogen';
 import type { HeaderQuery, CartApiQueryFragment } from 'storefrontapi.generated';
 import { useAside } from '~/components/Aside';
-import { Menu, Search, ShoppingBag, User } from 'lucide-react';
+import { Menu, Search, ShoppingBag, User, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface HeaderProps {
@@ -115,14 +115,15 @@ function HeaderCtas({
 }
 
 function HeaderMenuMobileToggle() {
-  const { open } = useAside();
+  const { open, close, type } = useAside();
+  const isOpen = type === 'mobile';
   return (
     <button
       className="p-2 -ml-2 hover:bg-muted rounded-md transition-colors"
-      onClick={() => open('mobile')}
-      aria-label="Open menu"
+      onClick={() => (isOpen ? close() : open('mobile'))}
+      aria-label={isOpen ? 'Close menu' : 'Open menu'}
     >
-      <Menu className="w-6 h-6" />
+      {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
     </button>
   );
 }
