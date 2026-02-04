@@ -31,8 +31,11 @@
         "./app/*"
       ]
     },
+    "rootDirs": [
+      "app",
+      ".react-router/types/app"
+    ],
     "types": [
-      "@shopify/hydrogen/types",
       "@shopify/mini-oxygen"
     ]
   },
@@ -40,6 +43,7 @@
     "src",
     "app",
     "env.d.ts",
+    ".react-router",
     "**/*.ts",
     "**/*.tsx"
   ]
