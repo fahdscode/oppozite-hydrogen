@@ -55,6 +55,20 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
  */
 export function links() {
   return [
+    // DNS Prefetch for external domains
+    {
+      rel: 'dns-prefetch',
+      href: 'https://cdn.shopify.com',
+    },
+    {
+      rel: 'dns-prefetch',
+      href: 'https://fonts.googleapis.com',
+    },
+    {
+      rel: 'dns-prefetch',
+      href: 'https://fonts.gstatic.com',
+    },
+    // Preconnect for critical resources
     {
       rel: 'preconnect',
       href: 'https://cdn.shopify.com',
@@ -63,7 +77,6 @@ export function links() {
       rel: 'preconnect',
       href: 'https://shop.app',
     },
-    { rel: 'icon', type: 'image/svg+xml', href: favicon },
     {
       rel: 'preconnect',
       href: 'https://fonts.googleapis.com',
@@ -73,6 +86,20 @@ export function links() {
       href: 'https://fonts.gstatic.com',
       crossOrigin: 'anonymous',
     },
+    // Preload critical above-the-fold assets
+    {
+      rel: 'preload',
+      href: '/hero-poster.png',
+      as: 'image',
+    },
+    {
+      rel: 'preload',
+      href: '/oppozite-logo.png',
+      as: 'image',
+    },
+    // Favicon
+    { rel: 'icon', type: 'image/svg+xml', href: favicon },
+    // Google Fonts
     {
       rel: 'stylesheet',
       href: 'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap',

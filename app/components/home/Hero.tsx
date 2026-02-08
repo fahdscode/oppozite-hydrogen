@@ -60,6 +60,7 @@ export const Hero = () => {
         loop
         muted
         playsInline
+        preload="metadata"
         className="absolute inset-0 w-full h-full object-cover -z-0 opacity-100"
         poster="/hero-poster.png"
       >

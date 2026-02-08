@@ -1,25 +1,61 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router";
+import { useEffect, useRef, useState } from "react";
 
 
 export const VideoManifesto = () => {
+    const sectionRef = useRef<HTMLElement>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const [isVisible, setIsVisible] = useState(false);
+
+    // Lazy load video when section comes into view
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting && !isVisible) {
+                        setIsVisible(true);
+                        // Start loading and playing the video
+                        if (videoRef.current) {
+                            videoRef.current.load();
+                            videoRef.current.play().catch(() => {
+                                // Autoplay might be blocked, that's ok
+                            });
+                        }
+                    }
+                });
+            },
+            { rootMargin: '200px 0px', threshold: 0.1 }
+        );
+
+        if (sectionRef.current) {
+            observer.observe(sectionRef.current);
+        }
+
+        return () => observer.disconnect();
+    }, [isVisible]);
+
     return (
-        <section className="relative h-[80vh] w-full overflow-hidden flex items-center justify-center">
+        <section ref={sectionRef} className="relative h-[80vh] w-full overflow-hidden flex items-center justify-center">
             {/* Video Background */}
             <div className="absolute inset-0 z-0">
                 <div className="absolute inset-0 bg-black/40 z-10" />
                 <video
-                    autoPlay
+                    ref={videoRef}
+                    autoPlay={isVisible}
                     loop
                     muted
                     playsInline
+                    preload="none"
                     className="w-full h-full object-cover"
                     poster="/manifesto.png"
                 >
-                    <source
-                        src="/VERT_vid.mp4"
-                        type="video/mp4"
-                    />
+                    {isVisible && (
+                        <source
+                            src="/VERT_vid.mp4"
+                            type="video/mp4"
+                        />
+                    )}
                     {/* Fallback for browsers that don't support video */}
                     <div className="w-full h-full bg-neutral-900" />
                 </video>

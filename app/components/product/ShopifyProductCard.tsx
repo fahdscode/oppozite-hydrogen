@@ -34,7 +34,14 @@ export const ShopifyProductCard = ({ product, index = 0 }: ShopifyProductCardPro
   const activeImageUrl = selectedVariantImage || (isHovered ? node?.images?.edges?.[currentImageIndex]?.node.url : node?.images?.edges?.[0]?.node.url);
   const activeImageAlt = selectedVariantImage ? node?.title : (isHovered ? node?.images?.edges?.[currentImageIndex]?.node.altText : node?.images?.edges?.[0]?.node.altText);
 
-  const price = node.priceRange.minVariantPrice;
+  const price = node?.priceRange?.minVariantPrice;
+
+  // Guard against malformed product data
+  if (!node || !price) {
+    console.warn('[ShopifyProductCard] Invalid product data:', { id: node?.id, handle: node?.handle });
+    return null;
+  }
+
   const compareAtPrice = node.variants?.edges?.[0]?.node?.compareAtPrice;
   const isAvailable = node.variants?.edges?.some(v => v?.node?.availableForSale) ?? false;
   const isSale = compareAtPrice && parseFloat(compareAtPrice.amount) > parseFloat(price.amount);
@@ -127,7 +134,7 @@ export const ShopifyProductCard = ({ product, index = 0 }: ShopifyProductCardPro
         </div>
 
         {/* Color Pills */}
-        {node.options.find(opt => opt.name === "Color") && (
+        {node?.options?.find(opt => opt.name === "Color") && (
           <div className="flex gap-2 mt-3">
             {node.options.find(opt => opt.name === "Color")?.values.slice(0, 5).map((color, i) => (
               <button
