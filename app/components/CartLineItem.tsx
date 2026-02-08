@@ -100,8 +100,10 @@ export function CartLineItem({
 function CartLineQuantity({ line }: { line: CartLine }) {
   if (!line || typeof line?.quantity === 'undefined') return null;
   const { id: lineId, quantity, isOptimistic } = line;
+  const maxQuantity = 2; // Max items per variant
   const prevQuantity = Number(Math.max(0, quantity - 1).toFixed(0));
-  const nextQuantity = Number((quantity + 1).toFixed(0));
+  const nextQuantity = Number(Math.min(maxQuantity, quantity + 1).toFixed(0));
+  const isAtMax = quantity >= maxQuantity;
 
   return (
     <div className="flex items-center border border-border h-8">
@@ -124,8 +126,8 @@ function CartLineQuantity({ line }: { line: CartLine }) {
           aria-label="Increase quantity"
           name="increase-quantity"
           value={nextQuantity}
-          disabled={!!isOptimistic}
-          className="w-8 h-full flex items-center justify-center hover:bg-muted transition-colors disabled:opacity-50 disabled:hover:bg-transparent"
+          disabled={!!isOptimistic || isAtMax}
+          className={`w-8 h-full flex items-center justify-center transition-colors ${isAtMax ? 'opacity-50 cursor-not-allowed' : 'hover:bg-muted'} disabled:opacity-50 disabled:hover:bg-transparent`}
         >
           <Plus className="w-3 h-3" />
         </button>

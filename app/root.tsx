@@ -17,6 +17,7 @@ import appStyles from '~/styles/app.css?url';
 import { PageLayout } from './components/PageLayout';
 import { Toaster } from '~/components/ui/toaster';
 import { Toaster as Sonner } from '~/components/ui/sonner';
+import { MetaPixel } from '~/components/MetaPixel';
 
 export type RootLoader = typeof loader;
 
@@ -170,6 +171,7 @@ export function Layout({ children }: { children?: React.ReactNode }) {
         <Links />
       </head>
       <body>
+        <MetaPixel />
         {children}
         <Toaster />
         <Sonner />

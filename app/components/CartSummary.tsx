@@ -6,6 +6,7 @@ import { useFetcher } from 'react-router';
 import type { FetcherWithComponents } from 'react-router';
 import { Loader2, ExternalLink } from 'lucide-react';
 import { useAside } from './Aside';
+import { trackInitiateCheckout } from './MetaPixel';
 
 type CartSummaryProps = {
   cart: OptimisticCart<CartApiQueryFragment | null>;
@@ -39,7 +40,7 @@ export function CartSummary({ cart, layout }: CartSummaryProps) {
         <CartGiftCard giftCardCodes={cart?.appliedGiftCards} />
 
         <div className="space-y-3 pt-2">
-          <CartCheckoutActions checkoutUrl={cart?.checkoutUrl} />
+          <CartCheckoutActions checkoutUrl={cart?.checkoutUrl} cart={cart} />
           {layout === 'aside' && (
             <button
               onClick={close}
@@ -54,14 +55,31 @@ export function CartSummary({ cart, layout }: CartSummaryProps) {
   );
 }
 
-function CartCheckoutActions({ checkoutUrl }: { checkoutUrl?: string }) {
+function CartCheckoutActions({ checkoutUrl, cart }: { checkoutUrl?: string; cart?: OptimisticCart<CartApiQueryFragment | null> }) {
   if (!checkoutUrl) return null;
+
+  const handleCheckoutClick = () => {
+    if (cart) {
+      const contentIds = cart.lines?.nodes?.map((line) => line.merchandise?.product?.id) || [];
+      const totalAmount = cart.cost?.totalAmount?.amount ? parseFloat(cart.cost.totalAmount.amount) : 0;
+      const currency = cart.cost?.totalAmount?.currencyCode || 'USD';
+      const numItems = cart.totalQuantity || 0;
+
+      trackInitiateCheckout({
+        content_ids: contentIds.filter((id): id is string => !!id),
+        value: totalAmount,
+        currency: currency,
+        num_items: numItems,
+      });
+    }
+  };
 
   return (
     <a
       href={checkoutUrl}
       target="_self"
       className="w-full btn-primary flex items-center justify-center gap-2 no-underline"
+      onClick={handleCheckoutClick}
     >
       <ExternalLink className="w-4 h-4" />
       Checkout

@@ -71,7 +71,7 @@ export const ShopifyProductCard = ({ product, index = 0 }: ShopifyProductCardPro
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Image Container */}
-      <div className="relative aspect-[3/4] bg-muted overflow-hidden rounded-lg">
+      <div className="relative aspect-[3/4] bg-muted overflow-hidden rounded-lg" data-debug-source="ShopifyProductCard-verified">
         {activeImageUrl ? (
           <Link to={`/products/${node.handle}`} className="block absolute inset-0">
             <motion.img
@@ -113,7 +113,7 @@ export const ShopifyProductCard = ({ product, index = 0 }: ShopifyProductCardPro
       </div>
 
       {/* Details */}
-      <Link to={`/products/${node.handle}`} className="block mt-4 space-y-1 group/link">
+      <Link to={`/products/${node.handle}`} className="block mt-4 space-y-1 group/link" data-debug-link="true">
         <h3 className="text-sm font-medium tracking-wide group-hover/link:underline">
           {node.title}
         </h3>

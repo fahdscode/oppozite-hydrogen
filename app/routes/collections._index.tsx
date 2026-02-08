@@ -21,7 +21,7 @@ export default function Collections() {
 
   return (
     <>
-      <section className="py-16 md:py-24 bg-foreground text-background">
+      <section className=" mt-14">
         <div className="container text-center">
           <h1 className="font-display text-6xl md:text-8xl">
             COLLECTIONS
@@ -35,7 +35,7 @@ export default function Collections() {
             {({ nodes, NextLink, isLoading }) => (
               <>
                 <div className="space-y-8 md:space-y-16">
-                  {nodes.map((collection, index: number) => (
+                  {nodes.map((collection: any, index: number) => (
                     <motion.div
                       key={collection.id}
                       initial={{ opacity: 0, y: 60 }}
@@ -66,7 +66,7 @@ export default function Collections() {
                           <span className="text-xs tracking-[0.3em] uppercase text-muted-foreground">
                             Collection {String(index + 1).padStart(2, "0")}
                           </span>
-                          <h2 className="font-display text-5xl md:text-7xl mt-2 mb-4 group-hover:translate-x-4 transition-transform duration-300">
+                          <h2 className="font-display text-5xl md:text-7xl mt-6 mb-4 group-hover:translate-x-4 transition-transform duration-300">
                             {collection.title}
                           </h2>
                           <p className="text-muted-foreground text-lg line-clamp-3">

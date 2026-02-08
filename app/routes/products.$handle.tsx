@@ -7,6 +7,7 @@ import { ImageGallery } from "~/components/product/ImageGallery";
 import { ShopifyProductCard } from "~/components/product/ShopifyProductCard";
 import { getColorValue } from "~/lib/colors";
 import { formatShopifyPrice } from "~/lib/shopify";
+import { trackViewContent, trackAddToCart } from "~/components/MetaPixel";
 import type { Route } from "./+types/products.$handle";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -36,9 +37,31 @@ export async function loader({ params, context }: Route.LoaderArgs) {
     variables: { productId: product.id },
   });
 
+  // Ensure we have at least 4 products for "You May Also Like" section
+  let relatedProducts = productRecommendations || [];
+
+  // If we have fewer than 4 recommendations, fetch additional products as fallback
+  if (relatedProducts.length < 4) {
+    const { products: fallbackProducts } = await storefront.query(FALLBACK_PRODUCTS_QUERY, {
+      variables: { first: 8 }, // Fetch more than needed to filter out current product
+    });
+
+    const fallbackNodes = fallbackProducts?.edges?.map((edge: any) => edge.node) || [];
+
+    // Filter out the current product and any products already in recommendations
+    const existingIds = new Set([product.id, ...relatedProducts.map((p: any) => p.id)]);
+    const additionalProducts = fallbackNodes.filter((p: any) => !existingIds.has(p.id));
+
+    // Combine and take first 4
+    relatedProducts = [...relatedProducts, ...additionalProducts].slice(0, 4);
+  } else {
+    // Limit to 4 products
+    relatedProducts = relatedProducts.slice(0, 4);
+  }
+
   return {
     product,
-    relatedProducts: productRecommendations,
+    relatedProducts,
   };
 }
 
@@ -60,6 +83,23 @@ export default function ProductDetail() {
     }
   }, [product]);
 
+  // Track ViewContent when product page loads
+  useEffect(() => {
+    if (product) {
+      const firstVariant = product.variants?.edges?.[0]?.node;
+      const price = firstVariant?.price?.amount ? parseFloat(firstVariant.price.amount) : 0;
+      const currency = firstVariant?.price?.currencyCode || 'USD';
+
+      trackViewContent({
+        content_ids: [product.id],
+        content_name: product.title,
+        content_type: 'product',
+        value: price,
+        currency: currency,
+      });
+    }
+  }, [product?.id]);
+
   const productImages = product.images?.edges?.map((img: any) => img?.node?.url).filter((url: any): url is string => !!url) || [];
 
   const getSelectedVariant = () => {
@@ -75,6 +115,14 @@ export default function ProductDetail() {
   const compareAtPrice = selectedVariant?.compareAtPrice;
   const isSale = selectedVariant && compareAtPrice && parseFloat(compareAtPrice.amount) > parseFloat(selectedVariant.price.amount);
   const selectedImage = selectedVariant?.image?.url;
+  const stockLimit = selectedVariant?.quantityAvailable ?? 2;
+
+  // Reset quantity when variant changes if it exceeds new stock
+  useEffect(() => {
+    if (selectedVariant?.quantityAvailable && quantity > selectedVariant.quantityAvailable) {
+      setQuantity(Math.max(1, selectedVariant.quantityAvailable));
+    }
+  }, [selectedVariant?.id]);
 
   return (
     <div className="pt-8 bg-background text-foreground">
@@ -255,11 +303,10 @@ export default function ProductDetail() {
                   <span className="w-12 text-center font-medium">{quantity}</span>
                   <motion.button
                     onClick={() => {
-                      const limit = selectedVariant?.quantityAvailable ?? Infinity;
-                      setQuantity(Math.min(limit, quantity + 1));
+                      setQuantity(Math.min(stockLimit, quantity + 1));
                     }}
-                    disabled={quantity >= (selectedVariant?.quantityAvailable ?? Infinity)}
-                    className="w-12 h-12 flex items-center justify-center hover:bg-secondary transition-colors disabled:opacity-50"
+                    disabled={quantity >= stockLimit}
+                    className={`w-12 h-12 flex items-center justify-center transition-colors ${quantity >= stockLimit ? 'opacity-50 cursor-not-allowed' : 'hover:bg-secondary'}`}
                   >
                     <Plus className="w-4 h-4" />
                   </motion.button>
@@ -292,6 +339,18 @@ export default function ProductDetail() {
                       whileHover={isAvailable ? { scale: 1.02 } : {}}
                       whileTap={isAvailable ? { scale: 0.98 } : {}}
                       type="submit"
+                      onClick={() => {
+                        if (isAvailable && selectedVariant) {
+                          trackAddToCart({
+                            content_ids: [product.id],
+                            content_name: product.title,
+                            content_type: 'product',
+                            value: parseFloat(selectedVariant.price.amount),
+                            currency: selectedVariant.price.currencyCode,
+                            quantity: quantity,
+                          });
+                        }
+                      }}
                     >
                       {fetcher.state !== "idle" ? "Adding..." : (!isAvailable ? "Sold Out" : "Add to Bag")}
                     </motion.button>
@@ -417,7 +476,7 @@ const PRODUCT_CARD_FRAGMENT = `#graphql
       name
       values
     }
-    variants(first: 1) {
+    variants(first: 100) {
       edges {
         node {
           id
@@ -445,6 +504,20 @@ const RECOMMENDATIONS_QUERY = `#graphql
     @inContext(country: $country, language: $language) {
     productRecommendations(productId: $productId) {
        ...ProductCard
+    }
+  }
+  ${PRODUCT_CARD_FRAGMENT}
+` as const;
+
+const FALLBACK_PRODUCTS_QUERY = `#graphql
+  query FallbackProducts($first: Int!, $country: CountryCode, $language: LanguageCode)
+    @inContext(country: $country, language: $language) {
+    products(first: $first, sortKey: BEST_SELLING) {
+      edges {
+        node {
+          ...ProductCard
+        }
+      }
     }
   }
   ${PRODUCT_CARD_FRAGMENT}

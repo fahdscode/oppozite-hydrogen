@@ -5,7 +5,7 @@ import { ShopifyProductCard } from '~/components/product/ShopifyProductCard';
 import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 
-export const meta: MetaFunction = ({ data }) => {
+export const meta: MetaFunction = ({ data }: { data: any }) => {
   return [{ title: `${data?.pageTitle || 'Shop'} | Oppozite Wears` }];
 };
 
@@ -41,13 +41,13 @@ export async function loader(args: Route.LoaderArgs) {
 }
 
 export default function Shop() {
-  const { products, pageTitle, collectionHandle } = useLoaderData<typeof loader>();
+  const { products, pageTitle, collectionHandle } = useLoaderData<typeof loader>() as any;
 
   return (
     <>
       <section className="py-16 md:py-24 bg-foreground text-background">
         <div className="container">
-          <h1 className="font-display text-6xl md:text-8xl text-center">
+          <h1 className="font-display text-6xl md:text-8xl text-center mt-14">
             {pageTitle}
           </h1>
           {collectionHandle && (
@@ -64,7 +64,7 @@ export default function Shop() {
             {({ nodes, NextLink, isLoading }) => (
               <>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
-                  {nodes.map((node) => (
+                  {nodes.map((node: any) => (
                     <ShopifyProductCard
                       key={node.id}
                       product={{ node }}

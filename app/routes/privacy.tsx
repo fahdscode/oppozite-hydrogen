@@ -8,7 +8,7 @@ export const meta: MetaFunction = () => {
 export default function Privacy() {
     return (
         <>
-            <section className="py-16 md:py-24 bg-foreground text-background">
+            <section className="py-16 md:py-24 bg-foreground text-background mt-14">
                 <div className="container">
                     <motion.h1
                         initial={{ opacity: 0, y: 20 }}

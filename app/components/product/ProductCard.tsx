@@ -23,7 +23,7 @@ export const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
     >
       {/* Image Container */}
       <div className="relative aspect-[3/4] bg-muted overflow-hidden">
-        <Link to={`/product/${product.id}`} className="block absolute inset-0">
+        <Link to={`/products/${product.id}`} className="block absolute inset-0">
           {/* Main Image */}
           <motion.img
             layoutId={`product-image-${product.id}`}
@@ -68,7 +68,7 @@ export const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
       </div>
 
       {/* Details */}
-      <Link to={`/product/${product.id}`} className="block mt-4 space-y-1 group/link">
+      <Link to={`/products/${product.id}`} className="block mt-4 space-y-1 group/link">
         <h3 className="text-sm font-medium tracking-wide group-hover/link:underline">
           {product.name}
         </h3>

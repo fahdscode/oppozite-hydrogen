@@ -77,7 +77,7 @@ export const ShopifyProductCard = ({ product, index = 0 }: ShopifyProductCardPro
       {/* Image Container */}
       <div className="relative aspect-[3/4] bg-muted overflow-hidden rounded-lg">
         {activeImageUrl ? (
-          <Link to={`/product/${node.handle}`} className="block absolute inset-0">
+          <Link to={`/products/${node.handle}`} className="block absolute inset-0">
             <motion.img
               layoutId={`product-image-${node.handle}`}
               key={activeImageUrl} // Key change triggers animation
@@ -117,7 +117,7 @@ export const ShopifyProductCard = ({ product, index = 0 }: ShopifyProductCardPro
       </div>
 
       {/* Details */}
-      <Link to={`/product/${node.handle}`} className="block mt-4 space-y-1 group/link">
+      <Link to={`/products/${node.handle}`} className="block mt-4 space-y-1 group/link">
         <h3 className="text-sm font-medium tracking-wide group-hover/link:underline">
           {node.title}
         </h3>

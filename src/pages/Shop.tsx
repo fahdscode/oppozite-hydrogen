@@ -70,7 +70,7 @@ const ShopPage = () => {
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="font-display text-6xl md:text-8xl text-center"
+            className="font-display text-6xl md:text-8xl text-center "
           >
             {pageTitle}
           </motion.h1>
