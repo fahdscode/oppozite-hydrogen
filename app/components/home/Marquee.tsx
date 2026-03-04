@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 
 export const Marquee = () => {
-  const text = "NEW ARRIVALS — FREE SHIPPING OVER $150 — EXCLUSIVE DROPS — ";
+  const text = "NEW ARRIVALS — BUY 2 GET 1 FREE — EXCLUSIVE DROPS — ";
   const repeatedText = Array(4).fill(text).join("");
 
   return (

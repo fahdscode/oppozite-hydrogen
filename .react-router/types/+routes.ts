@@ -6,6 +6,7 @@ declare module "react-router" {
   interface Register {
     pages: Pages
     routeFiles: RouteFiles
+    routeModules: RouteModules
   }
 }
 
@@ -357,4 +358,53 @@ type RouteFiles = {
     id: "routes/$";
     page: "/*";
   };
+};
+
+type RouteModules = {
+  "root": typeof import("./app/root.tsx");
+  "routes/blogs.$blogHandle.$articleHandle": typeof import("./app/routes/blogs.$blogHandle.$articleHandle.tsx");
+  "routes/api.$version.[graphql.json]": typeof import("./app/routes/api.$version.[graphql.json].tsx");
+  "routes/sitemap.$type.$page[.xml]": typeof import("./app/routes/sitemap.$type.$page[.xml].tsx");
+  "routes/blogs.$blogHandle._index": typeof import("./app/routes/blogs.$blogHandle._index.tsx");
+  "routes/collections.$handle": typeof import("./app/routes/collections.$handle.tsx");
+  "routes/account_.authorize": typeof import("./app/routes/account_.authorize.tsx");
+  "routes/collections._index": typeof import("./app/routes/collections._index.tsx");
+  "routes/policies.$handle": typeof import("./app/routes/policies.$handle.tsx");
+  "routes/products.$handle": typeof import("./app/routes/products.$handle.tsx");
+  "routes/account_.logout": typeof import("./app/routes/account_.logout.tsx");
+  "routes/collections.all": typeof import("./app/routes/collections.all.tsx");
+  "routes/policies._index": typeof import("./app/routes/policies._index.tsx");
+  "routes/account_.login": typeof import("./app/routes/account_.login.tsx");
+  "routes/discount.$code": typeof import("./app/routes/discount.$code.tsx");
+  "routes/sustainability": typeof import("./app/routes/sustainability.tsx");
+  "routes/[sitemap.xml]": typeof import("./app/routes/[sitemap.xml].tsx");
+  "routes/pages.$handle": typeof import("./app/routes/pages.$handle.tsx");
+  "routes/[robots.txt]": typeof import("./app/routes/[robots.txt].tsx");
+  "routes/best-sellers": typeof import("./app/routes/best-sellers.tsx");
+  "routes/blogs._index": typeof import("./app/routes/blogs._index.tsx");
+  "routes/gift-cards": typeof import("./app/routes/gift-cards.tsx");
+  "routes/size-guide": typeof import("./app/routes/size-guide.tsx");
+  "routes/countdown": typeof import("./app/routes/countdown.tsx");
+  "routes/shipping": typeof import("./app/routes/shipping.tsx");
+  "routes/account": typeof import("./app/routes/account.tsx");
+  "routes/account.orders._index": typeof import("./app/routes/account.orders._index.tsx");
+  "routes/account.orders.$id": typeof import("./app/routes/account.orders.$id.tsx");
+  "routes/account.addresses": typeof import("./app/routes/account.addresses.tsx");
+  "routes/account.profile": typeof import("./app/routes/account.profile.tsx");
+  "routes/account._index": typeof import("./app/routes/account._index.tsx");
+  "routes/account.$": typeof import("./app/routes/account.$.tsx");
+  "routes/careers": typeof import("./app/routes/careers.tsx");
+  "routes/contact": typeof import("./app/routes/contact.tsx");
+  "routes/privacy": typeof import("./app/routes/privacy.tsx");
+  "routes/returns": typeof import("./app/routes/returns.tsx");
+  "routes/_index": typeof import("./app/routes/_index.tsx");
+  "routes/search": typeof import("./app/routes/search.tsx");
+  "routes/about": typeof import("./app/routes/about.tsx");
+  "routes/terms": typeof import("./app/routes/terms.tsx");
+  "routes/cart": typeof import("./app/routes/cart.tsx");
+  "routes/cart.$lines": typeof import("./app/routes/cart.$lines.tsx");
+  "routes/shop": typeof import("./app/routes/shop.tsx");
+  "routes/faq": typeof import("./app/routes/faq.tsx");
+  "routes/new": typeof import("./app/routes/new.tsx");
+  "routes/$": typeof import("./app/routes/$.tsx");
 };

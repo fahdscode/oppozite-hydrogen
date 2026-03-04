@@ -7,6 +7,7 @@ import { FeaturedProducts } from '~/components/home/FeaturedProducts';
 import { Lookbook } from '~/components/home/Lookbook';
 import { StatementSection } from '~/components/home/StatementSection';
 import { VideoManifesto } from '~/components/home/VideoManifesto';
+import { OfferPopup } from '~/components/home/OfferPopup';
 
 export const meta: MetaFunction = () => {
   return [{ title: 'Oppozite Wears | Premium Streetwear' }];
@@ -47,6 +48,7 @@ export default function Homepage() {
 
   return (
     <div className="home-page">
+      <OfferPopup />
       <Hero />
       <Marquee />
       <FeaturedProducts products={newDropsProducts} />
