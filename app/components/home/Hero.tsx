@@ -1,9 +1,18 @@
 import { motion, useScroll, useTransform, useSpring, useMotionValue } from "framer-motion";
 import { Link } from "react-router";
 import { ArrowRight } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export const Hero = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.defaultMuted = true;
+      videoRef.current.muted = true;
+      videoRef.current.play().catch((e) => console.warn("Video autoplay blocked", e));
+    }
+  }, []);
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 500], [0, 200]);
   const y2 = useTransform(scrollY, [0, 500], [0, -150]);
@@ -56,6 +65,7 @@ export const Hero = () => {
 
       {/* Background Video */}
       <video
+        ref={videoRef}
         autoPlay
         loop
         muted
