@@ -74,7 +74,7 @@ export const Hero = () => {
         className="absolute inset-0 w-full h-full object-cover -z-0 opacity-100"
         poster="/hero-poster.png"
       >
-        <source src="/Hero.mp4" type="video/mp4" />
+        <source src="https://cdn.shopify.com/videos/c/o/v/35ecfa113f3b4337b902fcfa6c367389.mp4" type="video/mp4" />
       </video>
 
       {/* Overlay */}
