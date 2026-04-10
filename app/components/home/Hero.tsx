@@ -4,15 +4,15 @@ import { ArrowRight } from "lucide-react";
 import { useEffect, useRef } from "react";
 
 export const Hero = () => {
-  const videoRef = useRef<HTMLVideoElement>(null);
+  // const videoRef = useRef<HTMLVideoElement>(null);
 
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.defaultMuted = true;
-      videoRef.current.muted = true;
-      videoRef.current.play().catch((e) => console.warn("Video autoplay blocked", e));
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (videoRef.current) {
+  //     videoRef.current.defaultMuted = true;
+  //     videoRef.current.muted = true;
+  //     videoRef.current.play().catch((e) => console.warn("Video autoplay blocked", e));
+  //   }
+  // }, []);
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 500], [0, 200]);
   const y2 = useTransform(scrollY, [0, 500], [0, -150]);
@@ -64,8 +64,8 @@ export const Hero = () => {
       </motion.div>
 
       {/* Background Video */}
-      <video
-        ref={videoRef}
+      {/* <video
+        // ref={videoRef}
         autoPlay
         loop
         muted
@@ -75,7 +75,8 @@ export const Hero = () => {
         poster="/hero-poster.png"
       >
         <source src="https://cdn.shopify.com/videos/c/o/v/35ecfa113f3b4337b902fcfa6c367389.mp4" type="video/mp4" />
-      </video>
+      </video> */}
+      <img src="/Hero.png" alt="Hero" className="absolute inset-0 w-full h-full object-cover -z-0 opacity-100" />
 
       {/* Overlay */}
       <div className="absolute inset-0 bg-black/70 -z-0" />

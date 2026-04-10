@@ -31,7 +31,7 @@ export function OfferPopup() {
                 {/* Image Section - Horizontal Banner */}
                 <div className="w-full h-90 md:h-auto shrink-0">
                     <img
-                        src="/images/offer-popup.jpeg"
+                        src="/popup.png"
                         alt="Promotional Offers"
                         className="w-full h-full object-cover  contrast-125 object-center"
                     />
@@ -42,9 +42,9 @@ export function OfferPopup() {
                     {/* Offer 1 */}
                     <div className="flex-1 flex flex-col items-center justify-center md:border-r border-b md:border-b-0 border-gray-200 pb-6 md:pb-0 mb-6 md:mb-0 md:pr-6">
                         <span className="text-[10px] md:text-xs font-bold tracking-[0.2em] text-gray-500 uppercase mb-2 md:mb-3 block">Limited Time</span>
-                        <h2 className="text-2xl md:text-3xl font-extrabold uppercase tracking-tight mb-2">Buy 2<br />Get 1 Free</h2>
+                        <h2 className="text-2xl md:text-3xl font-extrabold uppercase tracking-tight mb-2">Get 50% Off</h2>
                         <p className="text-xs md:text-sm text-gray-500 mb-5 md:mb-6 mt-1 md:mt-2 leading-relaxed max-w-[280px] mx-auto">
-                            Add 3 items to your cart. Get the lowest-priced one free.
+                            50% off all items—shop local style, Limited time only!
                         </p>
                         <Link
                             to="/collections/shop-all"
@@ -57,7 +57,7 @@ export function OfferPopup() {
                     </div>
 
                     {/* Offer 2 */}
-                    <div className="flex-1 flex flex-col items-center justify-center md:pl-6 pb-2 md:pb-0">
+                    {/* <div className="flex-1 flex flex-col items-center justify-center md:pl-6 pb-2 md:pb-0">
                         <span className="text-[10px] md:text-xs font-bold tracking-[0.2em] text-gray-500 uppercase mb-2 md:mb-3 block">Special Deal</span>
                         <h2 className="text-2xl md:text-3xl font-extrabold uppercase tracking-tight mb-2">Buy 1<br />Get 1 50% Off</h2>
                         <p className="text-xs md:text-sm text-gray-500 mb-5 md:mb-6 mt-1 md:mt-2 leading-relaxed max-w-[280px] mx-auto">
@@ -70,7 +70,7 @@ export function OfferPopup() {
                         >
                             Shop Offer
                         </Link>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>
