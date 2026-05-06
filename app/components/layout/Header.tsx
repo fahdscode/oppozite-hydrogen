@@ -10,7 +10,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "~/components/ui/dropdown-menu";
 import { login, openAccount } from "@/lib/auth";
 
 // Fallback menu
@@ -35,7 +35,8 @@ export const Header = () => {
   const { totalItems, openCart } = useCartStore();
   const itemCount = totalItems();
 
-  const transformUrl = (url: string) => {
+  const transformUrl = (url: string | null | undefined): string => {
+    if (!url) return '#';
     let path = url;
     try {
       const urlObj = new URL(url);
@@ -57,7 +58,7 @@ export const Header = () => {
   useEffect(() => {
     const loadMenu = async () => {
       try {
-        const menu = await fetchShopifyMenu("header-menu");
+        const menu = await fetchShopifyMenu("main-menu-hamburger");
         if (menu && menu.items.length > 0) {
           const mapItems = (items: ShopifyMenuItem[]): MenuItem[] => {
             return items.map((item) => ({

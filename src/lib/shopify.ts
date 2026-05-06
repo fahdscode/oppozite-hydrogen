@@ -585,7 +585,7 @@ export function formatShopifyPrice(amount: string, currencyCode: string): string
 export interface ShopifyMenuItem {
   id: string;
   title: string;
-  url: string;
+  url: string | null;
   items: ShopifyMenuItem[];
 }
 

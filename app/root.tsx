@@ -146,7 +146,7 @@ async function loadCriticalData({ context }: Route.LoaderArgs) {
     storefront.query(HEADER_QUERY, {
       cache: storefront.CacheLong(),
       variables: {
-        headerMenuHandle: 'header-menu', // Adjust to your header menu handle
+        headerMenuHandle: 'main-menu-hamburger', // Adjust to your header menu handle
       },
     }),
     // Add other queries here, so that they are loaded in parallel
