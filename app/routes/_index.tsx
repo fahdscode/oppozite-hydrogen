@@ -22,12 +22,24 @@ export async function loader(args: Route.LoaderArgs) {
 
 async function loadCriticalData({ context }: Route.LoaderArgs) {
   const { storefront } = context;
-  const { collection } = await storefront.query(NEW_DROPS_QUERY, {
-    variables: { handle: 'new-drops' },
-  });
+
+  const [
+    { collection },
+    { metaobjects: heroMeta },
+    { metaobjects: popupMeta },
+    { metaobjects: manifestoMeta },
+  ] = await Promise.all([
+    storefront.query(NEW_DROPS_QUERY, { variables: { handle: 'new-drops' } }),
+    storefront.query(HERO_CONTENT_QUERY),
+    storefront.query(POPUP_CONTENT_QUERY),
+    storefront.query(VIDEO_MANIFESTO_QUERY),
+  ]);
 
   return {
     newDrops: collection,
+    heroContent: heroMeta?.nodes?.[0] ?? null,
+    popupContent: popupMeta?.nodes?.[0] ?? null,
+    manifestoContent: manifestoMeta?.nodes?.[0] ?? null,
   };
 }
 
@@ -48,8 +60,8 @@ export default function Homepage() {
 
   return (
     <div className="home-page">
-      <OfferPopup />
-      <Hero />
+      <OfferPopup content={data.popupContent} />
+      <Hero content={data.heroContent} />
       <Marquee />
       <FeaturedProducts products={newDropsProducts} />
       <Suspense fallback={<div className="py-20 text-center">Loading Lookbook...</div>}>
@@ -60,7 +72,7 @@ export default function Homepage() {
         </Await>
       </Suspense>
       <StatementSection />
-      <VideoManifesto />
+      <VideoManifesto content={data.manifestoContent} />
     </div>
   );
 }
@@ -114,6 +126,92 @@ const NEW_DROPS_QUERY = `#graphql
                    }
                  }
                }
+            }
+          }
+        }
+      }
+    }
+  }
+` as const;
+
+const HERO_CONTENT_QUERY = `#graphql
+  query HeroContent {
+    metaobjects(type: "hero_content", first: 1) {
+      nodes {
+        overline:         field(key: "overline")   { value }
+        tagline:          field(key: "tagline")    { value }
+        subtitle:         field(key: "subtitle")   { value }
+        cta_text:         field(key: "cta_text")   { value }
+        cta_link:         field(key: "cta_link")   { value }
+        background_image: field(key: "background_image") {
+          reference {
+            ... on MediaImage {
+              image { url altText }
+            }
+          }
+        }
+        background_video: field(key: "background_video") {
+          reference {
+            ... on Video {
+              sources { url mimeType }
+            }
+          }
+        }
+      }
+    }
+  }
+` as const;
+
+const POPUP_CONTENT_QUERY = `#graphql
+  query PopupContent {
+    metaobjects(type: "popup_content", first: 1) {
+      nodes {
+        label:       field(key: "label")       { value }
+        offer_text:  field(key: "offer_text")  { value }
+        description: field(key: "description") { value }
+        cta_text:    field(key: "cta_text")    { value }
+        cta_link:    field(key: "cta_link")    { value }
+        enabled:     field(key: "enabled")     { value }
+        delay_ms:    field(key: "delay_ms")    { value }
+        image: field(key: "image") {
+          reference {
+            ... on MediaImage {
+              image { url altText }
+            }
+          }
+        }
+        video: field(key: "video") {
+          reference {
+            ... on Video {
+              sources { url mimeType }
+            }
+          }
+        }
+      }
+    }
+  }
+` as const;
+
+const VIDEO_MANIFESTO_QUERY = `#graphql
+  query VideoManifesto {
+    metaobjects(type: "video_manifesto", first: 1) {
+      nodes {
+        overline:  field(key: "overline")  { value }
+        heading:   field(key: "heading")   { value }
+        body_text: field(key: "body_text") { value }
+        cta_text:  field(key: "cta_text")  { value }
+        cta_link:  field(key: "cta_link")  { value }
+        video: field(key: "video") {
+          reference {
+            ... on Video {
+              sources { url mimeType }
+            }
+          }
+        }
+        poster: field(key: "poster") {
+          reference {
+            ... on MediaImage {
+              image { url altText }
             }
           }
         }

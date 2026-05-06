@@ -1,18 +1,31 @@
 import { motion, useScroll, useTransform, useSpring, useMotionValue } from "framer-motion";
 import { Link } from "react-router";
 import { ArrowRight } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
-export const Hero = () => {
-  // const videoRef = useRef<HTMLVideoElement>(null);
+type HeroField = { value: string } | null;
+type ImageRef = { reference: { image: { url: string; altText: string | null } } | null } | null;
+type VideoRef = { reference: { sources: { url: string; mimeType: string }[] } | null } | null;
 
-  // useEffect(() => {
-  //   if (videoRef.current) {
-  //     videoRef.current.defaultMuted = true;
-  //     videoRef.current.muted = true;
-  //     videoRef.current.play().catch((e) => console.warn("Video autoplay blocked", e));
-  //   }
-  // }, []);
+export type HeroContent = {
+  overline: HeroField;
+  tagline: HeroField;
+  subtitle: HeroField;
+  cta_text: HeroField;
+  cta_link: HeroField;
+  background_image: ImageRef;
+  background_video: VideoRef;
+} | null;
+
+export const Hero = ({ content }: { content: HeroContent }) => {
+  const overline = content?.overline?.value ?? 'New Season Drop';
+  const tagline = content?.tagline?.value ?? 'WEAR THE VIBE';
+  const subtitle = content?.subtitle?.value ?? 'Stand out from the crowd. Premium streetwear designed for those who dare to be different.';
+  const ctaText = content?.cta_text?.value ?? 'Shop Now';
+  const ctaLink = content?.cta_link?.value ?? '/shop?collection=shop-all';
+  const backgroundImage = content?.background_image?.reference?.image?.url ?? '/Hero.png';
+  const backgroundVideo = content?.background_video?.reference?.sources?.[0]?.url ?? null;
+
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 500], [0, 200]);
   const y2 = useTransform(scrollY, [0, 500], [0, -150]);
@@ -30,7 +43,7 @@ export const Hero = () => {
       const { innerWidth, innerHeight } = window;
       const x = clientX / innerWidth - 0.5;
       const y = clientY / innerHeight - 0.5;
-      mouseX.set(x * 50); // increased range
+      mouseX.set(x * 50);
       mouseY.set(y * 50);
     };
 
@@ -63,20 +76,22 @@ export const Hero = () => {
         }} />
       </motion.div>
 
-      {/* Background Video */}
-      {/* <video
-        // ref={videoRef}
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="metadata"
-        className="absolute inset-0 w-full h-full object-cover -z-0 opacity-100"
-        poster="/hero-poster.png"
-      >
-        <source src="https://cdn.shopify.com/videos/c/o/v/35ecfa113f3b4337b902fcfa6c367389.mp4" type="video/mp4" />
-      </video> */}
-      <img src="/Hero.png" alt="Hero" className="absolute inset-0 w-full h-full object-cover -z-0 opacity-100" />
+      {/* Background Media */}
+      {backgroundVideo ? (
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          className="absolute inset-0 w-full h-full object-cover -z-0 opacity-100"
+          poster={backgroundImage}
+        >
+          <source src={backgroundVideo} type="video/mp4" />
+        </video>
+      ) : (
+        <img src={backgroundImage} alt="Hero" className="absolute inset-0 w-full h-full object-cover -z-0 opacity-100" />
+      )}
 
       {/* Overlay */}
       <div className="absolute inset-0 bg-black/70 -z-0" />
@@ -90,7 +105,7 @@ export const Hero = () => {
             transition={{ duration: 0.6 }}
             className="text-xs tracking-[0.3em] uppercase text-background/60 mb-8"
           >
-            New Season Drop
+            {overline}
           </motion.p>
 
           {/* Main Title */}
@@ -110,7 +125,7 @@ export const Hero = () => {
                 className="w-[80vw] md:w-[20vw] max-w-2xl object-contain mb-4"
               />
               <span className="font-display italic text-[8vw] md:text-[6vw] text-background/80 leading-[0.9] tracking-tight">
-                WEAR THE VIBE
+                {tagline}
               </span>
             </motion.div>
           </motion.div>
@@ -122,8 +137,7 @@ export const Hero = () => {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="text-lg md:text-xl text-background/70 max-w-xl mx-auto mb-12 font-light"
           >
-            Stand out from the crowd. Premium streetwear
-            designed for those who dare to be different.
+            {subtitle}
           </motion.p>
 
           {/* CTA Buttons */}
@@ -134,13 +148,12 @@ export const Hero = () => {
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
             <Link
-              to="/shop?collection=shop-all"
+              to={ctaLink}
               className="group bg-background text-foreground px-10 py-5 text-sm tracking-widest uppercase font-medium flex items-center gap-3 hover:gap-5 transition-all"
             >
-              Shop Now
+              {ctaText}
               <ArrowRight className="w-4 h-4" />
             </Link>
-
           </motion.div>
         </div>
       </motion.div>
