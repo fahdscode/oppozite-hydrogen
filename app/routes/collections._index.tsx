@@ -55,6 +55,11 @@ export default function Collections() {
                                 data={collection.image}
                                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                               />
+                            ) : collection.products?.nodes[0]?.featuredImage ? (
+                              <Image
+                                data={collection.products.nodes[0].featuredImage}
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                              />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center text-muted-foreground">
                                 No Image Available
@@ -116,6 +121,16 @@ const COLLECTIONS_QUERY = `#graphql
           altText
           width
           height
+        }
+        products(first: 1) {
+          nodes {
+            featuredImage {
+              url
+              altText
+              width
+              height
+            }
+          }
         }
       }
       pageInfo {

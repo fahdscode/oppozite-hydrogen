@@ -70,18 +70,39 @@ export default function Collection() {
 
   return (
     <>
-      <section className="py-16 md:py-24 bg-foreground text-background mt-14">
-        <div className="container text-center">
-          <h1 className="font-display text-6xl md:text-8xl uppercase">
-            {collection.title}
-          </h1>
-          {collection.description && (
-            <p className="mt-4 text-background/60 max-w-xl mx-auto text-lg leading-relaxed">
-              {collection.description}
-            </p>
-          )}
-        </div>
-      </section>
+      {collection.image ? (
+        <section className="relative py-28 md:py-40 mt-[86px] overflow-hidden">
+          <img
+            src={collection.image.url}
+            alt={collection.image.altText ?? collection.title}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/60" />
+          <div className="relative z-10 container text-center text-white">
+            <h1 className="font-display text-6xl md:text-8xl uppercase">
+              {collection.title}
+            </h1>
+            {collection.description && (
+              <p className="mt-4 text-white/70 max-w-xl mx-auto text-lg leading-relaxed">
+                {collection.description}
+              </p>
+            )}
+          </div>
+        </section>
+      ) : (
+        <section className="py-16 md:py-24 bg-foreground text-background mt-[86px]">
+          <div className="container text-center">
+            <h1 className="font-display text-6xl md:text-8xl uppercase">
+              {collection.title}
+            </h1>
+            {collection.description && (
+              <p className="mt-4 text-background/60 max-w-xl mx-auto text-lg leading-relaxed">
+                {collection.description}
+              </p>
+            )}
+          </div>
+        </section>
+      )}
 
       <section className="py-12 md:py-20">
         <div className="container">
@@ -203,6 +224,12 @@ const COLLECTION_QUERY = `#graphql
       handle
       title
       description
+      image {
+        url
+        altText
+        width
+        height
+      }
       products(
         first: $first,
         last: $last,

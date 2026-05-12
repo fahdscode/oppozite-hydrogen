@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 
 type PopupField = { value: string } | null;
 type ImageRef = { reference: { image: { url: string; altText: string | null } } | null } | null;
-type VideoRef = { reference: { sources: { url: string; mimeType: string }[] } | null } | null;
+type VideoRef = { reference: { sources: { url: string; mimeType: string }[] } | { url: string } | null } | null;
 
 export type PopupContent = {
   label: PopupField;
@@ -25,8 +25,9 @@ export function OfferPopup({ content }: { content: PopupContent }) {
   const description = content?.description?.value ?? '50% off all items—shop local style, Limited time only!';
   const ctaText = content?.cta_text?.value ?? 'Shop Offer';
   const ctaLink = content?.cta_link?.value ?? '/collections/shop-all';
-  const imageUrl = content?.image?.reference?.image?.url ?? '/popup.png';
-  const videoUrl = content?.video?.reference?.sources?.[0]?.url ?? null;
+  const imageUrl = content?.image?.reference?.image?.url ?? null;
+  const videoRef = content?.video?.reference as any;
+  const videoUrl = videoRef?.sources?.find((s: any) => s.mimeType === 'video/mp4')?.url ?? videoRef?.url ?? null;
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -60,18 +61,18 @@ export function OfferPopup({ content }: { content: PopupContent }) {
               loop
               muted
               playsInline
+              preload="auto"
+              src={videoUrl}
               className="w-full h-full object-cover contrast-125"
-              poster={imageUrl}
-            >
-              <source src={videoUrl} type="video/mp4" />
-            </video>
-          ) : (
+              poster={imageUrl ?? undefined}
+            />
+          ) : imageUrl ? (
             <img
               src={imageUrl}
               alt="Promotional Offers"
               className="w-full h-full object-cover contrast-125 object-center"
             />
-          )}
+          ) : null}
         </div>
 
         {/* Content Section */}

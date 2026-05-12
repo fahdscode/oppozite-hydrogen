@@ -155,6 +155,9 @@ const HERO_CONTENT_QUERY = `#graphql
             ... on Video {
               sources { url mimeType }
             }
+            ... on GenericFile {
+              url
+            }
           }
         }
       }
@@ -185,6 +188,9 @@ const POPUP_CONTENT_QUERY = `#graphql
             ... on Video {
               sources { url mimeType }
             }
+            ... on GenericFile {
+              url
+            }
           }
         }
       }
@@ -205,6 +211,9 @@ const VIDEO_MANIFESTO_QUERY = `#graphql
           reference {
             ... on Video {
               sources { url mimeType }
+            }
+            ... on GenericFile {
+              url
             }
           }
         }

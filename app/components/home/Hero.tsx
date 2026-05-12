@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 type HeroField = { value: string } | null;
 type ImageRef = { reference: { image: { url: string; altText: string | null } } | null } | null;
-type VideoRef = { reference: { sources: { url: string; mimeType: string }[] } | null } | null;
+type VideoRef = { reference: { sources: { url: string; mimeType: string }[] } | { url: string } | null } | null;
 
 export type HeroContent = {
   overline: HeroField;
@@ -23,8 +23,9 @@ export const Hero = ({ content }: { content: HeroContent }) => {
   const subtitle = content?.subtitle?.value ?? 'Stand out from the crowd. Premium streetwear designed for those who dare to be different.';
   const ctaText = content?.cta_text?.value ?? 'Shop Now';
   const ctaLink = content?.cta_link?.value ?? '/shop?collection=shop-all';
-  const backgroundImage = content?.background_image?.reference?.image?.url ?? '/Hero.png';
-  const backgroundVideo = content?.background_video?.reference?.sources?.[0]?.url ?? null;
+  const backgroundImage = content?.background_image?.reference?.image?.url ?? null;
+  const ref = content?.background_video?.reference as any;
+  const backgroundVideo = ref?.sources?.find((s: any) => s.mimeType === 'video/mp4')?.url ?? ref?.url ?? null;
 
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 500], [0, 200]);
@@ -52,7 +53,7 @@ export const Hero = ({ content }: { content: HeroContent }) => {
   }, [mouseX, mouseY]);
 
   return (
-    <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden bg-foreground text-background">
+    <section className="relative min-h-[100vh] flex items-end justify-center overflow-hidden bg-foreground text-background">
       {/* Background Pattern */}
       <motion.div
         style={{ x: useTransform(springX, (val) => val * -1), y: useTransform(springY, (val) => val * -1) }}
@@ -83,20 +84,19 @@ export const Hero = ({ content }: { content: HeroContent }) => {
           loop
           muted
           playsInline
-          preload="metadata"
+          preload="auto"
+          src={backgroundVideo}
           className="absolute inset-0 w-full h-full object-cover -z-0 opacity-100"
-          poster={backgroundImage}
-        >
-          <source src={backgroundVideo} type="video/mp4" />
-        </video>
-      ) : (
+          poster={backgroundImage ?? undefined}
+        />
+      ) : backgroundImage ? (
         <img src={backgroundImage} alt="Hero" className="absolute inset-0 w-full h-full object-cover -z-0 opacity-100" />
-      )}
+      ) : null}
 
       {/* Overlay */}
       <div className="absolute inset-0 bg-black/70 -z-0" />
 
-      <motion.div style={{ y: y1 }} className="container relative z-10 py-32">
+      <motion.div style={{ y: y1 }} className="container relative z-10 pb-20">
         <div className="max-w-5xl mx-auto text-center">
           {/* Overline */}
           <motion.p
@@ -119,11 +119,11 @@ export const Hero = ({ content }: { content: HeroContent }) => {
               transition={{ duration: 0.8, delay: 0.1 }}
               className="flex flex-col items-center mb-8"
             >
-              <img
+              {/* <img
                 src="/oppozite-logo.png"
                 alt="OPPOZITE"
                 className="w-[80vw] md:w-[20vw] max-w-2xl object-contain mb-4"
-              />
+              /> */}
               <span className="font-display italic text-[8vw] md:text-[6vw] text-background/80 leading-[0.9] tracking-tight">
                 {tagline}
               </span>

@@ -3,7 +3,7 @@ import { Link } from "react-router";
 import { useEffect, useRef, useState } from "react";
 
 type ManifestoField = { value: string } | null;
-type VideoRef = { reference: { sources: { url: string; mimeType: string }[] } | null } | null;
+type VideoRef = { reference: { sources: { url: string; mimeType: string }[] } | { url: string } | null } | null;
 type ImageRef = { reference: { image: { url: string; altText: string | null } } | null } | null;
 
 export type ManifestoContent = {
@@ -22,8 +22,9 @@ export const VideoManifesto = ({ content }: { content: ManifestoContent }) => {
   const bodyText = content?.body_text?.value ?? 'Fashion is the armor to survive the reality of everyday life.\nWe don\'t just sell clothes; we provide the attitude.';
   const ctaText = content?.cta_text?.value ?? 'Join The Movement';
   const ctaLink = content?.cta_link?.value ?? '/shop';
-  const videoUrl = content?.video?.reference?.sources?.[0]?.url ?? '/VERT_vid.mp4';
-  const posterUrl = content?.poster?.reference?.image?.url ?? '/manifesto.png';
+  const videoFileRef = content?.video?.reference as any;
+  const videoUrl = videoFileRef?.sources?.find((s: any) => s.mimeType === 'video/mp4')?.url ?? videoFileRef?.url ?? null;
+  const posterUrl = content?.poster?.reference?.image?.url ?? null;
 
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -54,19 +55,24 @@ export const VideoManifesto = ({ content }: { content: ManifestoContent }) => {
       {/* Video Background */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-black/40 z-10" />
-        <video
-          ref={videoRef}
-          autoPlay={isVisible}
-          loop
-          muted
-          playsInline
-          preload="none"
-          className="w-full h-full object-cover"
-          poster={posterUrl}
-        >
-          {isVisible && <source src={videoUrl} type="video/mp4" />}
-          <div className="w-full h-full bg-neutral-900" />
-        </video>
+        {videoUrl ? (
+          <video
+            ref={videoRef}
+            loop
+            muted
+            playsInline
+            preload="none"
+            src={isVisible ? videoUrl : undefined}
+            className="w-full h-full object-cover"
+            poster={posterUrl ?? undefined}
+          />
+        ) : posterUrl ? (
+          <img
+            src={posterUrl}
+            alt=""
+            className="w-full h-full object-cover"
+          />
+        ) : null}
       </div>
 
       <div className="container relative z-20 text-center text-white">

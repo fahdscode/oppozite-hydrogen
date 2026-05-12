@@ -37,6 +37,12 @@ export default async function handleRequest(
       'data:',
       'https://cdn.shopify.com',
       'https://www.facebook.com',
+      `https://${context.env.PUBLIC_STORE_DOMAIN}`,
+    ],
+    mediaSrc: [
+      "'self'",
+      'https://cdn.shopify.com',
+      `https://${context.env.PUBLIC_STORE_DOMAIN}`,
     ],
     fontSrc: [
       "'self'",

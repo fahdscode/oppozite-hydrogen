@@ -27,6 +27,8 @@ export async function loader(args: Route.LoaderArgs) {
       products: collection.products,
       pageTitle: collection.title,
       collectionHandle: handle,
+      collectionImage: collection.image ?? null,
+      collectionDescription: collection.description ?? null,
     };
   } else {
     const { products } = await storefront.query(ALL_PRODUCTS_QUERY, {
@@ -41,22 +43,41 @@ export async function loader(args: Route.LoaderArgs) {
 }
 
 export default function Shop() {
-  const { products, pageTitle, collectionHandle } = useLoaderData<typeof loader>() as any;
+  const { products, pageTitle, collectionHandle, collectionImage, collectionDescription } = useLoaderData<typeof loader>() as any;
 
   return (
     <>
-      <section className="py-16 md:py-24 bg-foreground text-background">
-        <div className="container">
-          <h1 className="font-display text-6xl md:text-8xl text-center mt-14">
-            {pageTitle}
-          </h1>
-          {collectionHandle && (
-            <p className="text-center mt-4 text-background/60 tracking-widest text-sm uppercase">
-              Collection
-            </p>
-          )}
-        </div>
-      </section>
+      {collectionImage ? (
+        <section className="relative py-28 md:py-40 mt-14 overflow-hidden">
+          <img
+            src={collectionImage.url}
+            alt={collectionImage.altText ?? pageTitle}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/60" />
+          <div className="relative z-10 container text-center text-white">
+            <h1 className="font-display text-6xl md:text-8xl uppercase">{pageTitle}</h1>
+            {collectionDescription && (
+              <p className="mt-4 text-white/70 max-w-xl mx-auto text-lg leading-relaxed">
+                {collectionDescription}
+              </p>
+            )}
+          </div>
+        </section>
+      ) : (
+        <section className="py-16 md:py-24 bg-foreground text-background">
+          <div className="container">
+            <h1 className="font-display text-6xl md:text-8xl text-center mt-14">
+              {pageTitle}
+            </h1>
+            {collectionHandle && (
+              <p className="text-center mt-4 text-background/60 tracking-widest text-sm uppercase">
+                Collection
+              </p>
+            )}
+          </div>
+        </section>
+      )}
 
       <section className="py-12 md:py-20">
         <div className="container">
@@ -169,6 +190,13 @@ const COLLECTION_QUERY = `#graphql
     collection(handle: $handle) {
       id
       title
+      description
+      image {
+        url
+        altText
+        width
+        height
+      }
       products(first: $first, last: $last, before: $startCursor, after: $endCursor) {
         nodes {
           ...ProductCard
