@@ -134,7 +134,7 @@ export function Footer({
       {/* Bottom */}
       <div className="border-t border-background/20">
         <div className="container mx-auto py-6 px-4 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-background/40">
-          <p>© 2026 <b>Oppozite</b>. Made with ❤️ by <a href="https://fahdscode.me" className="hover:text-background transition-colors">Fahd's Code</a></p>
+          <p>© 2026 <b>Oppozite</b>. Made by <a href="https://fahdscode.dev" className="hover:text-background transition-colors">Fahd's Code</a></p>
           <div className="flex gap-6">
             <Link to="/privacy" className="hover:text-background transition-colors">Privacy</Link>
             <Link to="/terms" className="hover:text-background transition-colors">Terms</Link>
